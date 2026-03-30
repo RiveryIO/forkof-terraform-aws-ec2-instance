@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.4.0](https://github.com/terraform-aws-modules/terraform-aws-ec2-instance/compare/v6.3.0...v6.4.0) (2026-03-26)
+
+### Features
+
+* Ec2 instance updates ([#475](https://github.com/terraform-aws-modules/terraform-aws-ec2-instance/issues/475)) ([cf22da7](https://github.com/terraform-aws-modules/terraform-aws-ec2-instance/commit/cf22da74a53804283adec5b24f8bd59632e02f1e))
+
 ## [6.3.0](https://github.com/terraform-aws-modules/terraform-aws-ec2-instance/compare/v6.2.0...v6.3.0) (2026-02-27)
 
 ### Features

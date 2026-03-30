@@ -68,9 +68,10 @@ resource "aws_instance" "this" {
     for_each = var.cpu_options != null ? [var.cpu_options] : []
 
     content {
-      amd_sev_snp      = cpu_options.value.amd_sev_snp
-      core_count       = cpu_options.value.core_count
-      threads_per_core = cpu_options.value.threads_per_core
+      amd_sev_snp           = cpu_options.value.amd_sev_snp
+      core_count            = cpu_options.value.core_count
+      nested_virtualization = cpu_options.value.nested_virtualization
+      threads_per_core      = cpu_options.value.threads_per_core
     }
   }
 
@@ -101,6 +102,7 @@ resource "aws_instance" "this" {
     }
   }
 
+  force_destroy                        = var.force_destroy
   get_password_data                    = var.get_password_data
   hibernation                          = var.hibernation
   host_id                              = var.host_id
@@ -177,6 +179,7 @@ resource "aws_instance" "this" {
   }
 
   placement_group            = var.placement_group
+  placement_group_id         = var.placement_group_id
   placement_partition_number = var.placement_partition_number
 
   dynamic "private_dns_name_options" {
@@ -203,6 +206,19 @@ resource "aws_instance" "this" {
       throughput            = root_block_device.value.throughput
       volume_size           = root_block_device.value.size
       volume_type           = root_block_device.value.type
+    }
+  }
+
+  dynamic "secondary_network_interface" {
+    for_each = var.secondary_network_interface != null ? var.secondary_network_interface : {}
+    content {
+      delete_on_termination    = secondary_network_interface.value.delete_on_termination
+      device_index             = coalesce(secondary_network_interface.value.device_index, secondary_network_interface.key)
+      interface_type           = secondary_network_interface.value.interface_type
+      network_card_index       = secondary_network_interface.value.network_card_index
+      private_ip_address_count = secondary_network_interface.value.private_ip_address_count
+      private_ip_addresses     = secondary_network_interface.value.private_ip_addresses
+      secondary_subnet_id      = secondary_network_interface.value.secondary_subnet_id
     }
   }
 
@@ -262,9 +278,10 @@ resource "aws_instance" "ignore_ami" {
     for_each = var.cpu_options != null ? [var.cpu_options] : []
 
     content {
-      amd_sev_snp      = cpu_options.value.amd_sev_snp
-      core_count       = cpu_options.value.core_count
-      threads_per_core = cpu_options.value.threads_per_core
+      amd_sev_snp           = cpu_options.value.amd_sev_snp
+      core_count            = cpu_options.value.core_count
+      nested_virtualization = cpu_options.value.nested_virtualization
+      threads_per_core      = cpu_options.value.threads_per_core
     }
   }
 
@@ -295,6 +312,7 @@ resource "aws_instance" "ignore_ami" {
     }
   }
 
+  force_destroy                        = var.force_destroy
   get_password_data                    = var.get_password_data
   hibernation                          = var.hibernation
   host_id                              = var.host_id
@@ -371,6 +389,7 @@ resource "aws_instance" "ignore_ami" {
   }
 
   placement_group            = var.placement_group
+  placement_group_id         = var.placement_group_id
   placement_partition_number = var.placement_partition_number
 
   dynamic "private_dns_name_options" {
@@ -397,6 +416,19 @@ resource "aws_instance" "ignore_ami" {
       throughput            = root_block_device.value.throughput
       volume_size           = root_block_device.value.size
       volume_type           = root_block_device.value.type
+    }
+  }
+
+  dynamic "secondary_network_interface" {
+    for_each = var.secondary_network_interface != null ? var.secondary_network_interface : {}
+    content {
+      delete_on_termination    = secondary_network_interface.value.delete_on_termination
+      device_index             = coalesce(secondary_network_interface.value.device_index, secondary_network_interface.key)
+      interface_type           = secondary_network_interface.value.interface_type
+      network_card_index       = secondary_network_interface.value.network_card_index
+      private_ip_address_count = secondary_network_interface.value.private_ip_address_count
+      private_ip_addresses     = secondary_network_interface.value.private_ip_addresses
+      secondary_subnet_id      = secondary_network_interface.value.secondary_subnet_id
     }
   }
 

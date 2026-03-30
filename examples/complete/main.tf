@@ -38,8 +38,10 @@ module "ec2_complete" {
   subnet_id              = element(module.vpc.private_subnets, 0)
   vpc_security_group_ids = [module.security_group.security_group_id]
   placement_group        = aws_placement_group.web.id
-  create_eip             = true
-  disable_api_stop       = false
+  # conflicts with placement_group
+  # placement_group_id = aws_placement_group.web.placement_group_id
+  create_eip       = true
+  disable_api_stop = false
 
   create_iam_instance_profile = true
   iam_role_description        = "IAM role for EC2 instance"
@@ -81,6 +83,8 @@ module "ec2_complete" {
     }
   }
 
+  force_destroy = true
+
   tags = local.tags
 }
 
@@ -95,6 +99,25 @@ module "ec2_network_interface" {
       delete_on_termination = false
     }
   }
+
+  # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/secondary-networks.html
+  # secondary_network_interface = {
+  #   1 = {
+  #     network_card_index       = 1
+  #     device_index             = 1
+  #     interface_type           = "secondary"
+  #     delete_on_termination    = true
+  #     private_ip_address_count = 1
+  #     secondary_subnet_id      = aws_ec2_secondary_subnet.this[0].id
+  #   }
+  #   2 = {
+  #     network_card_index       = 2
+  #     interface_type           = "secondary"
+  #     delete_on_termination    = true
+  #     private_ip_address_count = 1
+  #     secondary_subnet_id      = aws_ec2_secondary_subnet.this[1].id
+  #   }
+  # }
 
   tags = local.tags
 }
